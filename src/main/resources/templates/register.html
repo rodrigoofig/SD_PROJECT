@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Googol Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+
+    <link rel="stylesheet" type="text/css" href="css/login.css" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script>
+        // check if url bar has register?error=true
+        // if it exists, show an alert
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            if (error) {
+                alert("Invalid username or password");
+            }
+        }
+    </script>
+</head>
+
+<body class="text-center">
+<form class="form-signin" th:action="@{/register}" th:object="${RegisterRequest}" method="post" id="registerForm">
+    <img class="mb-4" src="https://d31sxl6qgne2yj.cloudfront.net/wordpress/wp-content/uploads/20190121140709/Minecraft-Pig-Head.jpg" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Please Register</h1>
+
+    <label for="inputEmail" class="sr-only">Account Info</label>
+    <input type="email" th:field="*{username}" id="inputEmail" class="form-control text-left" placeholder="Email address" required="" autofocus="">
+    <input type="password" th:field="*{password}" id="inputPassword" class="form-control" placeholder="Password" required="">
+
+    <label for="inputPassword" class="sr-only">User Info</label>
+    <input type="text" th:field="*{firstName}" id="inputName1" class="form-control mt-1" placeholder="First Name" required="">
+    <input type="text" th:field="*{lastName}" id="inputName2" class="form-control " placeholder="Last Name" required="">
+
+    <button class="btn btn-lg btn-danger btn-block mt-3" type="submit">Register</button>
+    <p class="mt-5 mb-3 text-muted f-sm">© 2023 Minecraft Rodrigo Edu Fixe</p>
+
+    <!-- back button -->
+    <a type="button" class="btn btn-link btn-lg mx-1 w-75" th:href="@{/}">Back</a>
+</form>
+</body>
+</html>

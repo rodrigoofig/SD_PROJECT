@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Top Searches - Googol Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+
+    <link rel="stylesheet" type="text/css" href="css/searchlinks.css" th:href="@{/css/searchlinks.css}"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script>
+        window.onload = function () {
+
+            var socket = new WebSocket("ws://localhost:8080/topsocket");
+            socket.onopen = function() {
+              console.log("Connected to socket server");
+            };
+
+            socket.onmessage = function(event) {
+              var message = event.data;
+              console.log("Received message from server:", message);
+
+              // Process the received message
+              // message is like this Received message from server: ["dhajsdhsa","universidade","uc","in","dasdas","estudante","ola","test","das","dsadas"]
+
+                // parse it to a list of strings
+                var searches = message.substring(1, message.length-1).split(",");
+                // remove the quotes from the strings
+                for (var i = 0; i < searches.length; i++) {
+                    searches[i] = searches[i].substring(1, searches[i].length-1);
+                }
+                // replace the table html with the new one
+                var table = document.getElementById("searches");
+                var tableBody = table.getElementsByTagName("tbody")[0];
+                tableBody.innerHTML = "";
+
+                for (var i = 0; i < searches.length; i++) {
+                    var row = tableBody.insertRow(i);
+                    var cell1 = row.insertCell(0);
+                    cell1.innerHTML = searches[i];
+                }
+
+
+            };
+
+            socket.onclose = function(event) {
+              console.log("Socket connection closed:", event.code, event.reason);
+            };
+
+            socket.onerror = function(error) {
+              console.error("Socket error:", error);
+            };
+
+
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="d-flex flex-column align-items-center justify-content-center main-rect">
+    <h1 class="pb-1 px-md-3 mx-auto text-center text-nowrap">Googol App</h1>
+    <h2 class="pb-1 mx-auto text-center">Search Engine</h2>
+    <img class="mb-4 mx-auto" src="https://i.pinimg.com/originals/84/93/cc/8493cc3c30cf5016b7df7b8e050e1292.png" alt=""
+         width="100" height="100">
+    <h5 class="pb-1 mx-auto text-center">Top Searches</h5>
+
+    <table class="table table-striped table-bordered table-hover table-sm w-75" id="searches">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Searches</th>
+        </tr>
+        </thead>
+        <tbody id="searches-body">
+        </tbody>
+    </table>
+
+    <a type="button" class="btn btn-link btn-lg mx-1 w-75" th:href="@{/dashboard(__${'admin=' + admin}__)}">Back</a>
+</div>
+</body>
+</html>
